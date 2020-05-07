@@ -46,51 +46,133 @@ const init = async () => {
     });
 
     server.route([
+        //Vehicle Types Section
         {
-            method: "GET",
-            path: "/VehicleType/",
+            method: "GET", //Reading Vehicle Type
+            path: "/VehicleTypes",
             handler: function (request, h) {
                 return VehicleType.query();
             },
         },
         {
+            method: "POST", //Adding Vehicle Types
+            path: "/VehicleTypeAdding",
+            handler: function (request, h) {
+                return VehicleType.query();
+            },
+        },
+
+
+        //Locations Section
+        {
             method: "GET",
-            path: "/Location",
+            path: "/Locations",
             handler: function (request, h) {
                 return Location.query();
             },
         },
         {
+            method: "POST",
+            path: "/LocationsAdding",
+            handler: function (request, h) {
+                return Location.query();
+            },
+        },
+        {
+            method: "PATCH",
+            path: "/LocationsEditing",
+            handler: function (request, h) {
+                return Location.query();
+            },
+        },
+
+
+        //Passengers Section
+        {
             method: "GET",
-            path: "/Passenger",
+            path: "/Passengers",
             handler: function (request, h) {
                 return Passenger.query();
             },
         },
+
+
+        //States Section
         {
             method: "GET",
-            path: "/State",
+            path: "/States",
             handler: function (request, h) {
                 return State.query();
             },
         },
         {
+            method: "POST",
+            path: "/StatesAdding",
+            handler: function (request, h) {
+                return State.query();
+            },
+        },
+        {
+            method: "PATCH",
+            path: "/StatesEditing",
+            handler: function (request, h) {
+                return State.query();
+            },
+        },
+
+
+        //Rides Section
+        {
             method: "GET",
-            path: "/Ride",
+            path: "/Rides",
             handler: function (request, h) {
                 return Ride.query();
             },
         },
         {
-            method: "GET",
-            path: "/Vehicle",
+            method: "POST",
+            path: "/RidesAdding",
+            handler: function (request, h) {
+                return Ride.query();
+            },
+        },
+        {
+            method: "PATCH",
+            path: "/RidesEditing",
+            handler: function (request, h) {
+                return Ride.query();
+            },
+        },
+
+
+        //Vehicles Section
+        {
+            method: "GET", // Reading Vehicles
+            path: "/Vehicles",
             handler: function (request, h) {
                 return Vehicle.query();
             },
         },
         {
+            method: "PUT", // Adding Vehicles
+            path: "/VehiclesAdding",
+            handler: function (request, h) {
+                return Vehicle.query();
+            },
+        },
+        {
+            method: "PATCH", // Editing Vehicles
+            path: "/VehiclesEditing",
+            handler: function (request, h) {
+                return Vehicle.query();
+            },
+        },
+
+
+        //Drivers Section
+        {
             method: "GET",
-            path: "/Driver",
+            path: "/Drivers",
             handler: function (request, h) {
                 return Driver.query();
             },
@@ -100,5 +182,10 @@ const init = async () => {
     console.log("Server listening on", server.info.uri);
     await server.start();
 };
+
+process.on("unhandledRejection", (err) => {
+    server.logger().error(err);
+    process.exit(1);
+  });
 
 init();
