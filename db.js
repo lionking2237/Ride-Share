@@ -57,8 +57,39 @@ const init = async () => {
         {
             method: "POST", //Adding Vehicle Types
             path: "/VehicleTypeAdding",
+            config: {
+                description: "Sign up for an account",
+                validate: {
+                  payload: Joi.object({
+                    type: Joi.string().required(),
+                  }),
+                },
+              },
             handler: function (request, h) {
-                return VehicleType.query();
+                const existingVehicle = await VehicleType.query()
+                .where("type", request.payload.type)
+                .first();
+                if(existingVehicle) {
+                    return {
+                        ok: false,
+                        msge: `car type of '${request.payload.type}' is already inserted.`,
+                    };
+                }
+
+                const newVehicleType = await VehicleType.query().insert({
+                    type: request.payload.type
+                });
+                if (newVehicleType) {
+                    return {
+                      ok: true,
+                      msge: `Created car type '${request.payload.type}'`,
+                    };
+                  } else {
+                    return {
+                      ok: false,
+                      msge: `Couldn't create account with email '${request.payload.type}'`,
+                    };
+                  }
             },
         },
 
