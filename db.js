@@ -170,8 +170,40 @@ const init = async () => {
         {
             method: "PATCH",
             path: "/RidesEditing",
+            config: {
+                description: "Change password for your account",
+                validate: {
+                  payload: Joi.object({
+                    date: Joi.string().required(),
+                    time: Joi.string().required(),
+                    distance: Joi.string().required(),
+                    fuelprice: Joi.string().required(),
+                    fee: Joi.string().required(),
+                  }),
+                },
+              },
             handler: function (request, h) {
-                return Ride.query();
+                const exisitingRide = await Ride.query()
+                .where("date", request.payload.date)
+                .update({
+                    date: request.payload.date,
+                    time: request.payload.time,
+                    distance: request.payload.distance,
+                    fuelprice: request.payload.fuelprice,
+                    fee: request.payload.fee,
+                });
+                if (exisitingRide) {
+                    return {
+                      ok: true,
+                      msge: 'Ride is Updated',
+                    };
+                  }
+                  else{
+                    return {
+                      ok: false,
+                      msge: 'Ride was not Updated'
+                    }
+                  }
             },
         },
 
