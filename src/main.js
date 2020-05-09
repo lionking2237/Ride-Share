@@ -6,17 +6,17 @@ import axios from "axios";
 import App from "./App.vue";
 
 const axiosClient = axios.create({
-  baseURL: "http://localhost:3000"
+    baseURL: "http://localhost:4200"
 });
 Vue.prototype.$axios = axiosClient;
 
 new Vue({
-  el: "#app",
-  data: {
-    currentUser: null
-  },
-  router,
-  store,
-  vuetify,
-  render: h => h(App)
+    el: "#app",
+    data: {
+        currentUser: null
+    },
+    router,
+    store,
+    vuetify,
+    render: h => h(App)
 });

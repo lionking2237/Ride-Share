@@ -49,14 +49,14 @@ const init = async () => {
         //Vehicle Types Section
         {
             method: "GET", //Reading Vehicle Type
-            path: "/vehicleTypes",
+            path: "/vehicle-types",
             handler: function (request, h) {
                 return VehicleType.query();
             },
         },
         {
             method: "POST",
-            path: "/vehicleTypes",
+            path: "/vehicle-types",
             config: {
                 description: "Create a new vehicle type",
                 validate: {
@@ -414,21 +414,21 @@ const init = async () => {
         //Locations Section
         {
             method: "GET",
-            path: "/Locations",
+            path: "/locations",
             handler: function (request, h) {
                 return Location.query();
             },
         },
         {
             method: "POST",
-            path: "/LocationsAdding",
+            path: "/locations",
             handler: function (request, h) {
                 return Location.query();
             },
         },
         {
             method: "PATCH",
-            path: "/LocationsEditing",
+            path: "/locations",
             handler: function (request, h) {
                 return Location.query();
             },
@@ -438,7 +438,7 @@ const init = async () => {
         //Passengers Section
         {
             method: "GET",
-            path: "/Passengers",
+            path: "/passengers",
             handler: function (request, h) {
                 return Passenger.query();
             },
@@ -448,21 +448,21 @@ const init = async () => {
         //States Section
         {
             method: "GET",
-            path: "/States",
+            path: "/states",
             handler: function (request, h) {
                 return State.query();
             },
         },
         {
             method: "POST",
-            path: "/StatesAdding",
+            path: "/states",
             handler: function (request, h) {
                 return State.query();
             },
         },
         {
             method: "PATCH",
-            path: "/StatesEditing",
+            path: "/states",
             handler: function (request, h) {
                 return State.query();
             },
@@ -472,36 +472,16 @@ const init = async () => {
         //Rides Section
         {
             method: "GET",
-            path: "/Rides",
+            path: "/rides",
             handler: function (request, h) {
                 return Ride.query();
             },
         },
-        {
-            method: "POST",
-            path: "/RidesAdding",
-            handler: function (request, h) {
-                return Ride.query();
-            },
-        },
+
         //Vehicles Section
         {
             method: "GET", // Reading Vehicles
-            path: "/Vehicles",
-            handler: function (request, h) {
-                return Vehicle.query();
-            },
-        },
-        {
-            method: "PUT", // Adding Vehicles
-            path: "/VehiclesAdding",
-            handler: function (request, h) {
-                return Vehicle.query();
-            },
-        },
-        {
-            method: "PATCH", // Editing Vehicles
-            path: "/VehiclesEditing",
+            path: "/vehicles",
             handler: function (request, h) {
                 return Vehicle.query();
             },
@@ -511,7 +491,7 @@ const init = async () => {
         //Drivers Section
         {
             method: "GET",
-            path: "/Drivers",
+            path: "/drivers",
             handler: function (request, h) {
                 return Driver.query();
             },
@@ -521,10 +501,5 @@ const init = async () => {
     console.log("Server listening on", server.info.uri);
     await server.start();
 };
-
-process.on("unhandledRejection", (err) => {
-    server.logger().error(err);
-    process.exit(1);
-  });
 
 init();
