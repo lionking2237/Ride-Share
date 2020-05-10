@@ -107,20 +107,23 @@ const init = async () => {
                         mpg: Joi.string().required(),
                         licenceState: Joi.string().required(),
                         licenseNumber: Joi.string().required(),
+                        vehicleType: Joi.string().required(),
                     }),
                 },
             },
             handler: async (request, h) => {
-                    const existingVehicle = await Account.query()
+                const existingVehicle = await Account.query()
                         .where("licenseNumber", request.payload.licenseNumber)
                         .first();
-                    if (existingVehicle) {
-                        return {
-                            ok: false,
-                            msge: `Vehicle with license number '${request.payload.licenseNumber}' is already in use`,
-                        };
-                    }
-
+                if (existingVehicle) {
+                    return {
+                        ok: false,
+                        msge: `Vehicle with license number '${request.payload.licenseNumber}' is already in use`,
+                    };
+                }
+                const vehicleTypeId = VehicleType.query()
+                    .where("type", request.payload.vehicleType)
+                    .first();
                 const newVehicle = await Vehicle.query().insert({
                     make: request.payload.make,
                     model: request.payload.model,
@@ -129,6 +132,7 @@ const init = async () => {
                     mpg: request.payload.mpg,
                     licenseState: request.payload.licenseState,
                     licenseNumber:request.payload.licenseNumber,
+                    vehicleTypeId: vehicleTypeId,
                 });
 
                 if (newVehicle) {
@@ -158,6 +162,7 @@ const init = async () => {
                         mpg: Joi.string().required(),
                         licenceState: Joi.string().required(),
                         licenseNumber: Joi.string().required(),
+                        vehicleType: Joi.string().required(),
                     }),
                 },
             },
@@ -167,6 +172,10 @@ const init = async () => {
                         .where("licenseNumber", request.payload.licenseNumber)
                         .first();
                     if (existingAccount) {
+                        const vehicleTypeId = VehicleType.query()
+                            .select("id")
+                            .where("type", request.payload.vehicleType)
+                            .first();
                         await Vehicle.query()
                             .where("licenseNumber", request.payload.licenseNumber)
                             .patch({
@@ -176,7 +185,9 @@ const init = async () => {
                                 capacity: request.payload.capacity,
                                 mpg: request.payload.mpg,
                                 licenseState: request.payload.licenseState,
-                                licenseNumber:request.payload.licenseNumber,});
+                                licenseNumber:request.payload.licenseNumber,
+                                vehicleTypeId: vehicleTypeId,
+                            });
                         console.log("Updated?");
                         return {
                             ok: true,
