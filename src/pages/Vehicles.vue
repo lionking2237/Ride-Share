@@ -31,11 +31,6 @@
                     label="Miles Per Gallon">
             </v-text-field>
             <v-text-field
-                    v-model="newVehicle.LicenseState"
-                    v-bind:rules="rules.required"
-                    label="License Plate State">
-            </v-text-field>
-            <v-text-field
                     v-model="newVehicle.LicenseNumber"
                     v-bind:rules="rules.required"
                     label="License Plate Number">
@@ -47,6 +42,7 @@
                     label="Vehicle Types"
             ></v-overflow-btn>
             <v-overflow-btn
+                    v-model="newVehicle.LicenseState"
                     :items="states"
                     label="States"
             ></v-overflow-btn>
@@ -85,35 +81,28 @@
         name: "Vehicles",
         data: function(){
             return{
-
                 rules:{
                     required: [(val) => val.length > 0 || "Required"],
                 },
                 valid: false,
                 vehicleCreated: false,
-
                 newVehicle: {
                     make: "",
                     model: "",
                     color: "",
                     capacity: "",
                     mpg:"",
-                    LicenseState:"IN",
+                    LicenseState:"",
                     LicenseNumber:"",
                     VehicleType:"",
-
                 },
-
                 dialogHeader: "<no dialogHeader>",
                 dialogText: "<no dialogText>",
                 dialogVisible: false,
-
                 vehicleTypes: [],
                 typeNames: {value:'type'},
                 states: [],
                 headers:[{text:"Type",value:"type"}],
-
-
             }
         },
         methods:{
@@ -158,7 +147,6 @@
         mounted: function () {
             this.$axios.get("/vehicle-types").then(response => {
                 console.log("RESPONSE", response);
-
                 this.vehicleTypes = response.data.map(entry => {
                     return {
                         text: entry.type,
@@ -168,13 +156,16 @@
             });
             this.$axios.get("/states").then(response => {
                 console.log("RESPONSE", response);
-                this.states = response.data;
-            })
-
+                this.states = response.data.map(entry => {
+                    return {
+                        text: entry.abbreviation,
+                        value: entry.abbreviation
+                    }
+                })
+            });
         }
     }
 </script>
 
 <style scoped>
-
 </style>
