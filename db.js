@@ -112,7 +112,7 @@ const init = async () => {
                 },
             },
             handler: async (request, h) => {
-                const existingVehicle = await Account.query()
+                const existingVehicle = await Vehicle.query()
                         .where("licenseNumber", request.payload.licenseNumber)
                         .first();
                 if (existingVehicle) {
@@ -121,9 +121,6 @@ const init = async () => {
                         msge: `Vehicle with license number '${request.payload.licenseNumber}' is already in use`,
                     };
                 }
-                const vehicleTypeId = VehicleType.query()
-                    .where("type", request.payload.vehicleType)
-                    .first();
                 const newVehicle = await Vehicle.query().insert({
                     make: request.payload.make,
                     model: request.payload.model,
@@ -132,7 +129,7 @@ const init = async () => {
                     mpg: request.payload.mpg,
                     licenseState: request.payload.licenseState,
                     licenseNumber:request.payload.licenseNumber,
-                    vehicleTypeId: vehicleTypeId,
+                    vehicleTypeId: request.payload.vehicleType,
                 });
 
                 if (newVehicle) {
@@ -430,20 +427,6 @@ const init = async () => {
                 return Location.query();
             },
         },
-        {
-            method: "POST",
-            path: "/locations",
-            handler: function (request, h) {
-                return Location.query();
-            },
-        },
-        {
-            method: "PATCH",
-            path: "/locations",
-            handler: function (request, h) {
-                return Location.query();
-            },
-        },
 
 
         //Passengers Section
@@ -459,20 +442,6 @@ const init = async () => {
         //States Section
         {
             method: "GET",
-            path: "/states",
-            handler: function (request, h) {
-                return State.query();
-            },
-        },
-        {
-            method: "POST",
-            path: "/states",
-            handler: function (request, h) {
-                return State.query();
-            },
-        },
-        {
-            method: "PATCH",
             path: "/states",
             handler: function (request, h) {
                 return State.query();
