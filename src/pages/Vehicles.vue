@@ -42,6 +42,7 @@
             </v-text-field>
             <!--Don't know how to access the names of the Vehicle Types or States yet-->
             <v-overflow-btn
+                    :item-value="'type'"
                     :items="vehicleTypes"
                     label="Vehicle Types"
             ></v-overflow-btn>
@@ -117,7 +118,7 @@
         },
         methods:{
             handleSubmit: function(){
-                this.accountCreated = false;
+                this.vehicleCreated = false;
                 this.$axios
                     .post("/vehicles", {
                         make: this.newVehicle.make,
@@ -134,7 +135,7 @@
                         // appropriate dialog.
                         if (result.data.ok) {
                             this.showDialog("Success", result.data.msge);
-                            this.accountCreated = true;
+                            this.vehicleCreated = true;
                         } else {
                             this.showDialog("Sorry", result.data.msge);
                         }
@@ -148,7 +149,7 @@
             },
             hideDialog: function () {
                 this.dialogVisible = false;
-                if (this.accountCreated) {
+                if (this.vehicleCreated) {
                     // Only navigate away from the sign-up page if we were successful.
                     this.$router.push({ name: "home-page" });
                 }
