@@ -42,7 +42,7 @@
             </v-text-field>
             <!--Don't know how to access the names of the Vehicle Types or States yet-->
             <v-overflow-btn
-                    :item-value="'type'"
+                    v-model="newVehicle.VehicleType"
                     :items="vehicleTypes"
                     label="Vehicle Types"
             ></v-overflow-btn>
@@ -100,7 +100,7 @@
                     mpg:"",
                     LicenseState:"IN",
                     LicenseNumber:"",
-                    VehicleType:"Pickup",
+                    VehicleType:"",
 
                 },
 
@@ -158,7 +158,13 @@
         mounted: function () {
             this.$axios.get("/vehicle-types").then(response => {
                 console.log("RESPONSE", response);
-                this.vehicleTypes = response.data;
+
+                this.vehicleTypes = response.data.map(entry => {
+                    return {
+                        text: entry.type,
+                        value: entry.id
+                    }
+                })
             });
             this.$axios.get("/states").then(response => {
                 console.log("RESPONSE", response);
