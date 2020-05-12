@@ -76,7 +76,7 @@ const init = async () => {
                     };
                 }
 
-                const newType = await Account.query().insert({
+                const newType = await VehicleType.query().insert({
                     type: request.payload.type,
                 });
 
@@ -107,7 +107,7 @@ const init = async () => {
                         mpg: Joi.string().required(),
                         licenceState: Joi.string().required(),
                         licenseNumber: Joi.string().required(),
-                        vehicleType: Joi.string().required(),
+                        vehicleType: Joi.number().integer().min(1).required(),
                     }),
                 },
             },
@@ -125,8 +125,8 @@ const init = async () => {
                     make: request.payload.make,
                     model: request.payload.model,
                     color: request.payload.color,
-                    capacity: request.payload.capacity,
-                    mpg: request.payload.mpg,
+                    capacity: parseInt(request.payload.capacity),
+                    mpg: parseInt(request.payload.mpg),
                     licenseState: request.payload.licenseState,
                     licenseNumber:request.payload.licenseNumber,
                     vehicleTypeId: request.payload.vehicleType,
@@ -455,6 +455,9 @@ const init = async () => {
             path: "/rides",
             handler: function (request, h) {
                 return Ride.query();
+                    //.$relatedQuery('vehicles')
+                    //.select('licenseNumber')
+                    //.where('id', 'vehicleId');
             },
         },
 
