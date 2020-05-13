@@ -8,10 +8,11 @@
 
     <v-spacer/>
 
-    <v-btn text v-bind:to="{ name: 'locations' }">Locations</v-btn>
     <v-btn text v-bind:to="{ name: 'about-us' }">About Us</v-btn>
-    <v-btn text v-bind:to="{name:'vehicles'}">Vehicles</v-btn>
     <v-btn text v-bind:to="{name:'rides'}">Rides</v-btn>
+    <v-btn text v-bind:to="{ name: 'locations' }">Locations</v-btn>
+    <v-btn text v-bind:to="{name:'vehicles'}"> Create Vehicles</v-btn>
+    <v-btn text v-bind:to="{name:'vehicleslist'}">Vehicles List</v-btn>
   </v-app-bar>
 </template>
 
