@@ -1,5 +1,21 @@
 <template>
-    <v-data-table :headers="headers" :items="rides"/>
+    <v-data-table :headers="headers" :items="rides">
+        <template v-slot:item.actions="{ item }">
+      <v-icon
+        small
+        class="mr-2"
+        @click="editItem(item)"
+      >
+        mdi-pencil
+      </v-icon>
+      <v-icon
+        small
+        @click="deleteItem(item)"
+      >
+        mdi-delete
+      </v-icon>
+    </template>
+    </v-data-table>
 </template>
 
 <script>
@@ -13,7 +29,6 @@
                     {text: "Distance", value: "distance"},
                     {text: "Fuel Price", value: "fuelPrice"},
                     {text: "Fee", value: "fee"},
-
                 ],
                 rides: [],
             }
@@ -28,5 +43,4 @@
 </script>
 
 <style scoped>
-
 </style>

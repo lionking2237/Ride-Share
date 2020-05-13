@@ -222,7 +222,6 @@
                     this.$router.push({ name: "home-page" });
                 }
             },
-
         },
         mounted: function () {
             this.$axios.get("/vehicle-types").then(response => {
