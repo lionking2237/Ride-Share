@@ -105,7 +105,7 @@ const init = async () => {
                         color: Joi.string().required(),
                         capacity: Joi.string().required(),
                         mpg: Joi.string().required(),
-                        licenceState: Joi.string().required(),
+                        licenseState: Joi.string().required(),
                         licenseNumber: Joi.string().required(),
                         vehicleType: Joi.number().integer().min(1).required(),
                     }),
@@ -464,7 +464,7 @@ const init = async () => {
         //Vehicles Section
         {
             method: "GET", // Reading Vehicles
-            path: "/vehicles",
+            path: "/vehicleslist",
             handler: function (request, h) {
                 return Vehicle.query();
             },
