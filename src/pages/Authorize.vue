@@ -47,7 +47,7 @@
             this.$axios.get("/rides").then(response => {
                 console.log("RESPONSE", response);
                 this.rides = response.data;
-            })
+            });
             this.$axios.get("/drivers").then(response => {
                 console.log("RESPONSE", response);
                 this.driverIds = response.data.map(entry => {

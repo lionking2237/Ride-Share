@@ -467,7 +467,7 @@ const init = async () => {
             method: "GET",
             path: "/drivers",
             handler: function (request, h) {
-                return Driver.query().findById(1).$relatedQuery("vehicles").where("id", Vehicle.id);
+                return Driver.query()
             },
         }
     ]);
