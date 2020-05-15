@@ -48,6 +48,7 @@
         name: "Authorize",
         data: function() {
             return {
+                valid: false,
                 rules:{
                     required: [(val) => val.length > 0|| (val)>0 || "Required"],
                 },
@@ -61,7 +62,6 @@
                 dialogText: "<no dialogText>",
                 dialogVisible: false,
                 authorizationCreated:false,
-
             }
         },
         methods:{
@@ -71,7 +71,7 @@
                     driverId: this.newAuthorize.driverId,
                     vehicleId: this.newAuthorize.vehicleId,
                 }).then(response => {
-                    if (result.data.ok) {
+                    if (response.data.ok) {
                         this.showDialog("Success", response.data.msge);
                         this.authorizationCreated = true;
                     } else {
@@ -92,7 +92,6 @@
                 this.dialogText = text;
                 this.dialogVisible = true;
             },
-
         },
         mounted: function () {
             this.$axios.get("/rides").then(response => {
