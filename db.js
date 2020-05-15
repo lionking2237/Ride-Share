@@ -409,6 +409,48 @@ const init = async () => {
             },
         },
 
+        {
+            method: "POST",
+            path: "/authorize",
+            config: {
+                description: "Authorize a New Driver to a Vehicle",
+                validate: {
+                    payload: Joi.object({
+                        driverId: Joi.number().integer().min(1).required(),
+                        vehicleId: Joi.number().integer().min(1).required(),
+                    }),
+                },
+            },
+            handler: async (request, h) => {
+                const driver = await Driver.query().findById(request.payload.driverId);
+                const vehicle = await Vehicle.query().findById(request.payload.vehicleId);
+
+                const existAuth = await driver
+                .$relatedQuery("vehicles")
+                .where("id", vehicle.id)
+                .first();
+                if (existAuth) {
+                    return {
+                        ok: false,
+                        msge: `This Authorization is already in place`,
+                    };
+                }
+
+                const affected = await driver.$relatedQuery("vehicles").relate(vehicle);
+                if (affected === 1) {
+                    return {
+                        ok: true,
+                        msge: `Authorization Created`,
+                    };
+                } else {
+                    return {
+                        ok: false,
+                        msge: `Couldn't create Authorization`,
+                    };
+                }
+            },
+        },
+
 
         //Locations Section
         {
@@ -467,7 +509,7 @@ const init = async () => {
             method: "GET",
             path: "/drivers",
             handler: function (request, h) {
-                return Driver.query()
+                return Driver.query();
             },
         }
     ]);
