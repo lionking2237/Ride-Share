@@ -479,7 +479,7 @@ const init = async () => {
                     payload: Joi.object({
                         firstName: Joi.string().required(),
                         lastName: Joi.string().required(),
-                        phone: Joi.number().integer().min(1).required(),
+                        phone: Joi.string().required(),
                     }),
                 },
             },
@@ -493,6 +493,49 @@ const init = async () => {
                       msge: `'${request.payload.firstName}' '${request.payload.lastName}' has already been created`,
                   };
               }
+                const newPassenger = await Passenger.query().insert({
+                    firstName: request.payload.firstName,
+                    lastName: request.payload.lastName,
+                    phone: request.payload.phone,
+                });
+
+                if (newPassenger) {
+                    return {
+                        ok: true,
+                        msge: `Created Passenger '${request.payload.firstName}'`,
+                    };
+                } else {
+                    return {
+                        ok: false,
+                        msge: `Couldn't create Passenger '${request.payload.lastName}'`,
+                    };
+                }
+            }
+        },
+        {
+            method: "POST",
+            path: "/drivers",
+            config: {
+                description: "Create a new Passenger",
+                validate: {
+                    payload: Joi.object({
+                        firstName: Joi.string().required(),
+                        lastName: Joi.string().required(),
+                        phone: Joi.string().required(),
+                        licenseNumber: Joi.string().required(),
+                    }),
+                },
+            },
+            handler: async function(request, h){
+                const existingDriver = await Driver.query()
+                    .where("licenseNumber", request.payload.licenseNumber)
+                    .first();
+                if(existingDriver){
+                    return {
+                        ok: false,
+                        msge: `'${request.payload.firstName}' '${request.payload.lastName}' has already been created`,
+                    };
+                }
                 const newPassenger = await Passenger.query().insert({
                     firstName: request.payload.firstName,
                     lastName: request.payload.lastName,
