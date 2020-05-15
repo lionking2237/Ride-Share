@@ -18,9 +18,6 @@
             <td><v-btn color="primary" dark class="mb-2" v-on:click="updateVehicle(item)">Push</v-btn></td>
             <td>
               <v-dialog v-model="dialog" max-width="500px">
-                <template>
-                  <v-btn color="primary" dark class="mb-2" v-on:click="updateVehicle(item)">Push</v-btn>
-                </template>
                 <v-card>
                   <v-card-title>
                     <span class="headline">{{ formTitle }}</span>
