@@ -536,21 +536,22 @@ const init = async () => {
                         msge: `'${request.payload.firstName}' '${request.payload.lastName}' has already been created`,
                     };
                 }
-                const newPassenger = await Passenger.query().insert({
+                const newDriver = await Driver.query().insert({
                     firstName: request.payload.firstName,
                     lastName: request.payload.lastName,
                     phone: request.payload.phone,
+                    licenseNumber: request.payload.licenseNumber,
                 });
 
-                if (newPassenger) {
+                if (newDriver) {
                     return {
                         ok: true,
-                        msge: `Created Passenger '${request.payload.firstName}'`,
+                        msge: `Created Driver '${request.payload.firstName}'`,
                     };
                 } else {
                     return {
                         ok: false,
-                        msge: `Couldn't create Passenger '${request.payload.lastName}'`,
+                        msge: `Couldn't create Driver '${request.payload.lastName}'`,
                     };
                 }
             }
@@ -572,10 +573,8 @@ const init = async () => {
             method: "GET",
             path: "/rides",
             handler: function (request, h) {
-                return Ride.query();
-                    //.$relatedQuery('vehicles')
-                    //.select('licenseNumber')
-                    //.where('id', 'vehicleId');
+                return Ride.query().withGraphFetched("[passengers, drivers]")
+
             },
         },
 

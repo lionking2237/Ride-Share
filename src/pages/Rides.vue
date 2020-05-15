@@ -29,6 +29,7 @@
                     {text: "Distance", value: "distance"},
                     {text: "Fuel Price", value: "fuelPrice"},
                     {text: "Fee", value: "fee"},
+                    {text: "Driver", value: "driver"},
                 ],
                 rides: [],
             }
@@ -36,7 +37,16 @@
         mounted: function () {
             this.$axios.get("/rides").then(response => {
                 console.log("RESPONSE", response);
-                this.rides = response.data;
+                this.rides = response.data.map(ride =>({
+                    date: ride.date,
+                    time: ride.time,
+                    distance: ride.distance,
+                    fuelPrice: ride.fuelPrice,
+                    fee: ride.fee,
+                    driver: ride.drivers.firstName + " " +ride.drivers.lastName,
+                    phone: ride.drivers.phone,
+                    license: ride.drivers.licenseNumber,
+                }));
             })
         }
     }
