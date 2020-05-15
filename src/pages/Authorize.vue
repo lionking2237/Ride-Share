@@ -19,6 +19,26 @@
             >Add Authorization
             </v-btn>
                </v-form>
+           <div class="text-xs-center">
+               <v-dialog v-model="dialogVisible" width="500">
+                   <v-card>
+                       <v-card-title primary-title>
+                           {{ dialogHeader }}
+                       </v-card-title>
+
+                       <v-card-text>
+                           {{ dialogText }}
+                       </v-card-text>
+
+                       <v-divider></v-divider>
+
+                       <v-card-actions>
+                           <v-spacer></v-spacer>
+                           <v-btn color="primary" text v-on:click="hideDialog">Okay</v-btn>
+                       </v-card-actions>
+                   </v-card>
+               </v-dialog>
+           </div>
        </div>
    </v-container>
 </template>
@@ -37,11 +57,42 @@
                 },
                 driverIds: [],
                 vehicleIds: [],
+                dialogHeader: "<no dialogHeader>",
+                dialogText: "<no dialogText>",
+                dialogVisible: false,
+                authorizationCreated:false,
 
             }
         },
-        handleSubmit: function() {
-            return "test";
+        methods:{
+            handleSubmit: function() {
+                this.authorizationCreated = false;
+                this.$axios.post("/authorize", {
+                    driverId: this.newAuthorize.driverId,
+                    vehicleId: this.newAuthorize.vehicleId,
+                }).then(response => {
+                    if (result.data.ok) {
+                        this.showDialog("Success", response.data.msge);
+                        this.authorizationCreated = true;
+                    } else {
+                        this.showDialog("Sorry", response.data.msge);
+                    }
+                })
+                    .catch((err) => this.showDialog("Failed", err));
+        },
+            hideDialog: function () {
+                this.dialogVisible = false;
+                if (this.vehicleCreated) {
+                    // Only navigate away from the sign-up page if we were successful.
+                    this.$router.push({ name: "home-page" });
+                }
+            },
+            showDialog: function (header, text) {
+                this.dialogHeader = header;
+                this.dialogText = text;
+                this.dialogVisible = true;
+            },
+
         },
         mounted: function () {
             this.$axios.get("/rides").then(response => {
