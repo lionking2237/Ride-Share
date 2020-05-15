@@ -22,11 +22,11 @@ class Ride extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: __dirname + "/Vehicle",
                 join: {
-                    from: 'Ride.vehicleid',
+                    from: 'Ride.vehicleId',
                     to: 'Vehicle.id'
                 }
             },
-            locations:{
+            fromLocations:{
                 relation: Model.BelongsToOneRelation,
                 modelClass: __dirname + "/Location",
                 join: {
@@ -34,7 +34,7 @@ class Ride extends Model {
                     to: 'Location.id'
                 },
             },
-            locations1:{
+            toLocations:{
                 relation: Model.BelongsToOneRelation,
                 modelClass: __dirname + "/Location",
                 join: {

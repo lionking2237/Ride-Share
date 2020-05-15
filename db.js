@@ -199,103 +199,37 @@ const init = async () => {
                     payload: Joi.object({
                         date: Joi.string().required(),
                         time: Joi.string().required(),
-                        distance: Joi.string().required(),
-                        fuelPrice: Joi.string().required(),
-                        fee: Joi.string().required(),
-                        fromLocationName: Joi.string().required(),
-                        fromLocationAddress: Joi.string().required(),
-                        fromLocationCity: Joi.string().required(),
-                        fromLocationState: Joi.string().required(),
-                        fromLocationZip:Joi.string().required(),
-                        toLocationName: Joi.string().required(),
-                        toLocationAddress: Joi.string().required(),
-                        toLocationCity: Joi.string().required(),
-                        toLocationState: Joi.string().required(),
-                        toLocationZip: Joi.string().required(),
-                        desiredVehicleLicense: Joi.string().required(),
+                        distance: Joi.number().min(1).required(),
+                        fuelPrice: Joi.number().min(1).required(),
+                        fee: Joi.number().min(1).required(),
+                        fromLocationId: Joi.number().min(1).required(),
+                        toLocationId: Joi.number().min(1).required(),
+                        vehicleId: Joi.number().min(1).required(),
                     }),
                 },
             },
             handler: async (request, h) => {
-                const existingFromLocation = await Location.query()
-                    .where("address", request.payload.fromLocationAddress)
-                    .first();
-                if(!existingFromLocation){
-                    await Location.query()
-                        .insert({
-                            name: request.payload.fromLocationName,
-                            address: request.payload.fromLocationAddress,
-                            city: request.payload.fromLocationCity,
-                            state: request.payload.fromLocationState,
-                            zipCode: request.payload.fromLocationZip,
-                        });
-                    const existingState = State.query()
-                        .where("abbreviation", request.payload.fromLocationState)
-                        .first();
-                    if(!existingState){
-                        await State.query()
-                            .insert({
-                                abbreviation: request.payload.fromLocationState,
-                                name: "N/A",
-                            });
-                    }
-                }
-                const existingToLocation = await Location.query()
-                    .where("address", request.payload.toLocationAddress)
-                    .first();
-                if(!existingToLocation){
-                    await Location.query()
-                        .insert({
-                            name: request.payload.toLocationName,
-                            address: request.payload.toLocationAddress,
-                            city: request.payload.toLocationCity,
-                            state: request.payload.toLocationState,
-                            zipCode: request.payload.toLocationZip,
-                        });
-                    const existingState = State.query()
-                        .where("abbreviation", request.payload.toLocationState)
-                        .first();
-                    if(!existingState){
-                        await State.query()
-                            .insert({
-                                abbreviation: request.payload.toLocationState,
-                                name: "N/A",
-                            });
-                    }
-                }
-                //known bug: does not check if license number is valid or not.
-                const vehicleId = Vehicle.query()
-                    .select("id")
-                    .where("licenseNumber", request.payload.desiredVehicleLicense)
-                    .first();
-
-                const fromLocationId = Location.query()
-                    .select("id")
-                    .where("address", request.payload.fromLocationAddress);
-                const toLocationId = Location.query()
-                    .select("id")
-                    .where("address", request.payload.toLocationAddress);
-
                 const newRide = await Ride.query()
-                    .insert({
+                    .where()
+                    .patch({
                         date: request.payload.date,
                         time: request.payload.time,
                         distance: request.payload.distance,
-                        fuelPrice: request.payload.fuelprice,
+                        fuelPrice: request.payload.fuelPrice,
                         fee: request.payload.fee,
-                        fromLocationId: fromLocationId,
-                        toLocationId: toLocationId,
-                        vehicleId: vehicleId,
+                        fromLocationId: request.payload.fromLocationId,
+                        toLocationId: request.payload.toLocationId,
+                        vehicleId: request.payload.vehicleId,
                     });
                 if (newRide) {
                     return {
                         ok: true,
-                        msge: `Created Ride from '${request.payload.fromLocationName}' to '${request.payload.toLocationName}'`,
+                        msge: `Created Ride on '${request.payload.date}' at '${request.payload.time}'`,
                     };
                 } else {
                     return {
                         ok: false,
-                        msge: `Couldn't Create Ride from '${request.payload.fromLocationName}' to '${request.payload.toLocationName}'`,
+                        msge: `Couldn't Create Ride`,
                     };
                 }
             },
@@ -309,80 +243,16 @@ const init = async () => {
                     payload: Joi.object({
                         date: Joi.string().required(),
                         time: Joi.string().required(),
-                        distance: Joi.string().required(),
-                        fuelPrice: Joi.string().required(),
-                        fee: Joi.string().required(),
-                        fromLocationName: Joi.string().required(),
-                        fromLocationAddress: Joi.string().required(),
-                        fromLocationCity: Joi.string().required(),
-                        fromLocationState: Joi.string().required(),
-                        fromLocationZip:Joi.string().required(),
-                        toLocationName: Joi.string().required(),
-                        toLocationAddress: Joi.string().required(),
-                        toLocationCity: Joi.string().required(),
-                        toLocationState: Joi.string().required(),
-                        toLocationZip: Joi.string().required(),
+                        distance: Joi.number().min(1).required(),
+                        fuelPrice: Joi.number().min(1).required(),
+                        fee: Joi.number().min(1).required(),
+                        fromLocationId: Joi.number().min(1).required(),
+                        toLocationId: Joi.number().min(1).required(),
+                        vehicleId: Joi.number().min(1).required(),
                     }),
                 },
             },
             handler: async (request, h) => {
-                const existingFromLocation = await Location.query()
-                    .where("address", request.payload.fromLocationAddress)
-                    .first();
-                if(!existingFromLocation){
-                    await Location.query()
-                        .insert({
-                            name: request.payload.fromLocationName,
-                            address: request.payload.fromLocationAddress,
-                            city: request.payload.fromLocationCity,
-                            state: request.payload.fromLocationState,
-                            zipCode: request.payload.fromLocationZip,
-                        });
-                    const existingState = State.query()
-                        .where("abbreviation", request.payload.fromLocationState)
-                        .first();
-                    if(!existingState){
-                        await State.query()
-                            .insert({
-                                abbreviation: request.payload.fromLocationState,
-                                name: "N/A",
-                            });
-                    }
-                }
-                const existingToLocation = await Location.query()
-                    .where("address", request.payload.toLocationAddress)
-                    .first();
-                if(!existingToLocation){
-                    await Location.query()
-                        .insert({
-                            name: request.payload.toLocationName,
-                            address: request.payload.toLocationAddress,
-                            city: request.payload.toLocationCity,
-                            state: request.payload.toLocationState,
-                            zipCode: request.payload.toLocationZip,
-                        });
-                    const existingState = State.query()
-                        .where("abbreviation", request.payload.toLocationState)
-                        .first();
-                    if(!existingState){
-                        await State.query()
-                            .insert({
-                                abbreviation: request.payload.toLocationState,
-                                name: "N/A",
-                            });
-                    }
-                }
-                //known bug: does not check if license number is valid or not.
-                const vehicleId = Vehicle.query()
-                    .select("id")
-                    .where("licenseNumber", request.payload.desiredVehicleLicense)
-                    .first();
-                const fromLocationId = Location.query()
-                    .select("id")
-                    .where("address", request.payload.fromLocationAddress);
-                const toLocationId = Location.query()
-                    .select("id")
-                    .where("address", request.payload.toLocationAddress);
 
                 const newRide = await Ride.query()
                     .insert({
@@ -573,8 +443,14 @@ const init = async () => {
             method: "GET",
             path: "/rides",
             handler: function (request, h) {
-                return Ride.query().withGraphFetched("[passengers, drivers]")
-
+                return Ride.query().withGraphFetched("[passengers, drivers, fromLocations, toLocations, vehicles]")
+            },
+        },
+        {
+            method: "GET",
+            path: "/driverRides",
+            handler: function (request, h) {
+                return Ride.query().withGraphFetched("[passengers, drivers, fromLocations, toLocations, vehicles]")
             },
         },
 
