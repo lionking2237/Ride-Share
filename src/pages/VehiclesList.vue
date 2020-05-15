@@ -15,10 +15,11 @@
             <td>{{ item.licenseState }}</td>
             <td>{{ item.licenseNumber }}</td>
             <td>{{item.type}}</td>
+            <td><v-btn color="primary" dark class="mb-2" v-on:click="updateVehicle(item)">Push</v-btn></td>
             <td>
               <v-dialog v-model="dialog" max-width="500px">
                 <template>
-                  <v-btn color="primary" dark class="mb-2" v-on="updateVehicle(item)">Push</v-btn>
+                  <v-btn color="primary" dark class="mb-2" v-on:click="updateVehicle(item)">Push</v-btn>
                 </template>
                 <v-card>
                   <v-card-title>
@@ -106,8 +107,18 @@
               mpg: this.editedItem.mpg,
               licenseState: this.editedItem.licenseState,
               licenseNumber: this.editedItem.licenseNumber,
-              type:this.editedItem.type
-            });
+              vehicleType:this.editedItem.vehicleType,
+            }).then((result) => {
+              // Based on whether things worked or not, show the
+              // appropriate dialog.
+              if (result.data.ok) {
+                this.showDialog("Success", result.data.msge);
+                this.vehicleUpdated = true;
+              } else {
+                this.showDialog("Sorry", result.data.msge);
+              }
+            })
+                    .catch((err) => this.showDialog("Failed", err));
           },
           showSnackbar(text) {
             this.snackbar.text = text;
@@ -145,6 +156,7 @@
                 licenseNum:[(val) => val.length > 0 && val.length < 16],
                 required: [(val) => val.length > 0|| (val)>0 || "Required"],
               },
+                vehicleUpdated: false,
                 dialog: false,
                 headers: [
                     {text: "Make", value: "make"},
@@ -172,7 +184,8 @@
                     mpg: 0,
                     licenseState: '',
                     licenseNumber: '',
-                    type:''
+                    type:'',
+                    vehicleType:'',
                 },
                 defaultItem: {
                     make: '',

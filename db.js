@@ -155,48 +155,39 @@ const init = async () => {
                         make: Joi.string().required(),
                         model: Joi.string().required(),
                         color: Joi.string().required(),
-                        capacity: Joi.string().required(),
-                        mpg: Joi.string().required(),
-                        licenceState: Joi.string().required(),
+                        capacity: Joi.number().integer().min(1).required(),
+                        mpg: Joi.number().integer().min(1).required(),
+                        licenseState: Joi.string().required(),
                         licenseNumber: Joi.string().required(),
-                        vehicleType: Joi.string().required(),
+                        vehicleType: Joi.number().integer().min(1).required(),
                     }),
                 },
             },
             handler: async (request, h) => {
-
-                    const existingAccount = await Vehicle.query()
-                        .where("licenseNumber", request.payload.licenseNumber)
-                        .first();
-                    if (existingAccount) {
-                        const vehicleTypeId = VehicleType.query()
-                            .select("id")
-                            .where("type", request.payload.vehicleType)
-                            .first();
-                        await Vehicle.query()
-                            .where("licenseNumber", request.payload.licenseNumber)
-                            .patch({
-                                make: request.payload.make,
-                                model: request.payload.model,
-                                color: request.payload.color,
-                                capacity: request.payload.capacity,
-                                mpg: request.payload.mpg,
-                                licenseState: request.payload.licenseState,
-                                licenseNumber:request.payload.licenseNumber,
-                                vehicleTypeId: vehicleTypeId,
-                            });
-                        console.log("Updated?");
-                        return {
-                            ok: true,
-                            msge: `Vehicle with license number '${request.payload.licenseNumber}' has been updated`,
-                        };
-                    }else{
-                        return {
-                            ok: false,
-                            msge: `Vehicle with license number '${request.payload.licenseNumber}' has not been updated`,
-                        };
-                    }
-
+                const updatedVehicle = await Vehicle.query()
+                    .where("licenseNumber", request.payload.licenseNumber)
+                    .patch({
+                        make: request.payload.make,
+                        model: request.payload.model,
+                        color: request.payload.color,
+                        capacity: request.payload.capacity,
+                        mpg: request.payload.mpg,
+                        licenseState: request.payload.licenseState,
+                        licenseNumber:request.payload.licenseNumber,
+                        vehicleTypeId: request.payload.vehicleType,
+                    });
+                console.log("Updated?");
+                if (updatedVehicle) {
+                    return {
+                        ok: true,
+                        msge: `Created vehicle with license plate '${request.payload.licenseNumber}'`,
+                    };
+                } else {
+                    return {
+                        ok: false,
+                        msge: `Couldn't create vehicle with license plate '${request.payload.licenseNumber}'`,
+                    };
+                }
             },
         },
         {
