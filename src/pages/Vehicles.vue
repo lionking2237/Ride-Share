@@ -79,7 +79,6 @@
                     v-bind:rules="rules.licenceNum"
                     label="License Plate Number">
             </v-text-field>
-            <!--Don't know how to access the names of the Vehicle Types or States yet-->
             <v-overflow-btn
                     v-bind:rules="rules.required"
                     v-model="newVehicle.vehicleType"
@@ -139,11 +138,11 @@
                     type: ""
                 },
                 newVehicle: {
-                    make: "Ford",
-                    model: "F150",
-                    color: "Red",
-                    capacity: "4",
-                    mpg: "4",
+                    make: "",
+                    model: "",
+                    color: "",
+                    capacity: "",
+                    mpg: "",
                     licenseState:"",
                     licenseNumber:"",
                     vehicleType:"",

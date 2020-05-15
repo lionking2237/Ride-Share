@@ -466,7 +466,7 @@ const init = async () => {
             method: "GET", // Reading Vehicles
             path: "/vehicleslist",
             handler: function (request, h) {
-                return Vehicle.query();
+                return Vehicle.query().withGraphFetched("vehicleTypes")
             },
         },
 
@@ -476,7 +476,7 @@ const init = async () => {
             method: "GET",
             path: "/drivers",
             handler: function (request, h) {
-                return Driver.query();
+                return Driver.query().findById(1).$relatedQuery("vehicles").where("id", Vehicle.id);
             },
         }
     ]);
