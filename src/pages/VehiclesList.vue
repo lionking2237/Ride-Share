@@ -15,9 +15,11 @@
             <td>{{ item.licenseState }}</td>
             <td>{{ item.licenseNumber }}</td>
             <td>{{item.type}}</td>
-            <td><v-btn color="primary" dark class="mb-2" v-on:click="updateVehicle(item)">Push</v-btn></td>
-            <td>
-              <v-dialog v-model="dialog" max-width="500px">
+            <td><v-btn color="primary" dark class="mb-2" v-on:click="showDialog(item)">Push</v-btn></td>
+          </tr>
+        </template>
+      </v-data-table>
+              <v-dialog v-model="dialogVisible" max-width="500px">
                 <v-card>
                   <v-card-title>
                     <span class="headline">{{ formTitle }}</span>
@@ -66,21 +68,11 @@
 
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                    <v-btn color="blue darken-1" text v-on:click="save">Save</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
 
-            </td>
-          </tr>
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-icon small class="ml-2" @click="updateVehicle(item)">
-            mdi-pencil
-          </v-icon>
-        </template>
-
-      </v-data-table>
     <v-snackbar v-model="snackbar.show">
       {{ snackbar.text }}
       <v-btn color="blue" text @click="snackbar.show = false">
@@ -90,13 +82,15 @@
   </div>
 </template>
 
+
+
+
 <script>
     export default {
         name: "vehiclesList",
         methods:{
-
           save: function(){
-            this.$axios.patch("/vehicles/{id}", {
+            this.$axios.patch(`/vehicles/${this.editedItem.id}`, {
               make: this.editedItem.make,
               model: this.editedItem.model,
               color: this.editedItem.color,
@@ -109,42 +103,29 @@
               // Based on whether things worked or not, show the
               // appropriate dialog.
               if (result.data.ok) {
-                this.showDialog("Success", result.data.msge);
+                this.showSnackbar("Success" + result.data.msge);
                 this.vehicleUpdated = true;
+                this.dialogVisible = false;
               } else {
-                this.showDialog("Sorry", result.data.msge);
+                this.showSnackbar("Sorry" + result.data.msge);
               }
             })
                     .catch((err) => this.showDialog("Failed", err));
+                    
+          },
+          showDialog(item) {
+            this.editedItem = item;
+            this.dialogVisible = true;
           },
           showSnackbar(text) {
             this.snackbar.text = text;
             this.snackbar.show = true;
           },
-
           updateVehicle: function(item){
             this.editedIndex = this.vehicleslist.indexOf(item);
             this.editedItem =  item;
             console.log("Hey look here its "+this.editedItem);
             this.dialog = true;
-            this.$axios.get("/vehicle-types").then(response => {
-              console.log("RESPONSE", response);
-              this.vehicleTypes = response.data.map(entry => {
-                return {
-                  text: entry.type,
-                  value: entry.id
-                }
-              })
-            });
-            this.$axios.get("/states").then(response => {
-              console.log("RESPONSE", response);
-              this.states = response.data.map(entry => {
-                return {
-                  text: entry.name,
-                  value: entry.abbreviation
-                }
-              })
-            });
           },
         },
         data: function() {
@@ -154,7 +135,9 @@
                 required: [(val) => val.length > 0|| (val)>0 || "Required"],
               },
                 vehicleUpdated: false,
-                dialog: false,
+                
+                dialogVisible: false,
+
                 headers: [
                     {text: "Make", value: "make"},
                     {text: "Model", value: "model"},
@@ -200,6 +183,7 @@
             this.$axios.get("/vehicleslist").then(response => {
                 console.log("RESPONSE", response);
                 this.vehicleslist = response.data.map(vehicle =>({
+                  id: vehicle.id,
                   make: vehicle.make,
                   model: vehicle.model,
                   color: vehicle.color,
@@ -210,17 +194,41 @@
                   type: vehicle.vehicleTypes.type
                 }));
             });
-
-
-
+            this.$axios.get("/vehicle-types").then(response => {
+              console.log("RESPONSE", response);
+              this.vehicleTypes = response.data.map(entry => {
+                return {
+                  text: entry.type,
+                  value: entry.id
+                }
+              })
+            });
+            this.$axios.get("/states").then(response => {
+              console.log("RESPONSE", response);
+              this.states = response.data.map(entry => {
+                return {
+                  text: entry.name,
+                  value: entry.abbreviation
+                }
+              })
+            });
         },
-
         computed: {
             formTitle: function () {
                 return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
             },
         },
     }
+    /* Rides.query()
+.withGraphFetched("[passengers,drivers]")
+
+Rides.query()
+.findById(request.rideId)
+.withGraphFetched("[passengers,drivers]")
+
+Drivers.query()
+.findById(request.params.driverId)
+.withGraphFetched("vehicles.rides") */
 </script>
 
 <style scoped>

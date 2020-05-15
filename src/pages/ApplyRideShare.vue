@@ -4,17 +4,44 @@
        <div>
            <v-form v-model="valid">
                <v-text-field
+               v-model="newPassenger.firstName"
                v-bind:rules="rules.required"
-               label="Passenger Name">
+               label="Passenger First Name">
                </v-text-field>
-               <v-btn v-bind:disabled="!valid" v-on:click="handleSubmit"
+               <v-text-field
+               v-model="newPassenger.lastName"
+               v-bind:rules="rules.required"
+               label="Passenger Last Name">
+               </v-text-field>
+               <v-text-field
+               v-model="newPassenger.phone"
+               v-bind:rules="rules.required"
+               label="Passenger Cellphone Number">
+               </v-text-field>
+               <v-btn v-bind:disabled="!valid" v-on:click="createPassenger"
             >Add Passenger
             </v-btn>
                <v-text-field
+               v-model="newDriver.firstName"
                v-bind:rules="rules.required"
-               label="Driver Name">
+               label="Driver First Name">
                </v-text-field>
-               <v-btn v-bind:disabled="!valid" v-on:click="handleSubmit"
+               <v-text-field
+               v-model="newDriver.lastName"
+               v-bind:rules="rules.required"
+               label="Driver Last Name">
+               </v-text-field>
+               <v-text-field
+               v-model="newDriver.phone"
+               v-bind:rules="rules.required"
+               label="Driver Cellphone Number">
+               </v-text-field>
+               <v-text-field
+               v-model="newDriver.licenseNumber"
+               v-bind:rules="rules.required"
+               label="Driver License Number">
+               </v-text-field>
+               <v-btn v-bind:disabled="!valid" v-on:click="createDriver"
             >Add Driver
             </v-btn>
                </v-form>
@@ -27,22 +54,61 @@
         name: "ApplyRideShare",
         data: function() {
             return {
-                headers: [
-                    {text: "Date", value: "date"},
-                    {text: "Time", value: "time"},
-                    {text: "Distance", value: "distance"},
-                    {text: "Fuel Price", value: "fuelPrice"},
-                    {text: "Fee", value: "fee"},
+                rules:{
+                    required: [(val) => val.length > 0|| (val)>0 || "Required"],
+                },
+                newPassenger: [
+                    firstName: "",
+                    lastName: "",
+                    phone: "",
                 ],
-                rides: [],
+                newDriver: [
+                    firstName: "",
+                    lastName: "",
+                    phone: "",
+                    licenseNumber: "",
+                ]
                 rules:{
                     licenceNum:[(val) => val.length > 0 && val.length < 16],
                     required: [(val) => val.length > 0|| (val)>0 || "Required"],
                 },
             }
         },
-        handleSubmit: function() {
-            return "test";
+        methods: {
+            createPassenger: function() {
+                this.$axios.post("/passengers", {
+                    firstName: this.newPassenger.firstName,
+                    lastName: this.newPassenger.lastName,
+                    phone: this.newPassenger.phone,
+                }).then((result) => {
+                        // Based on whether things worked or not, show the
+                        // appropriate dialog.
+                        if (result.data.ok) {
+                            this.showDialog("Success", result.data.msge);
+                        } else {
+                            this.showDialog("Sorry", result.data.msge);
+                        }
+                    }).catch((err) => this.showDialog("Failed", err));
+            },
+            createDriver: function() {
+                this.$axios.post("/drivers", {
+                    firstName: this.newDriver.firstName,
+                    lastName: this.newDriver.lastName,
+                    phone: this.newDriver.phone,
+                    licenseNumber: this.newDriver.licenseNumber,
+                }).then((result) => {
+                        // Based on whether things worked or not, show the
+                        // appropriate dialog.
+                        if (result.data.ok) {
+                            this.showDialog("Success", result.data.msge);
+                        } else {
+                            this.showDialog("Sorry", result.data.msge);
+                        }
+                    }).catch((err) => this.showDialog("Failed", err));
+            },
+        },
+
+        
         },
         mounted: function () {
             this.$axios.get("/rides").then(response => {
