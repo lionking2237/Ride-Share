@@ -5,14 +5,18 @@
            <v-form v-model="valid">
                <v-overflow-btn
                v-bind:rules="rules.required"
+               v-model="newAuthorize.driverId"
+               :items="driverIds"
                label="Driver">
                </v-overflow-btn>
                <v-overflow-btn
                v-bind:rules="rules.required"
+               v-model="newAuthorize.vehicleId"
+               :items="vehicleIds"
                label="Vehicle">
                </v-overflow-btn>
                <v-btn v-bind:disabled="!valid" v-on:click="handleSubmit"
-            >Add Vehicle
+            >Add Authorization
             </v-btn>
                </v-form>
        </div>
@@ -24,18 +28,16 @@
         name: "Authorize",
         data: function() {
             return {
-                headers: [
-                    {text: "Date", value: "date"},
-                    {text: "Time", value: "time"},
-                    {text: "Distance", value: "distance"},
-                    {text: "Fuel Price", value: "fuelPrice"},
-                    {text: "Fee", value: "fee"},
-                ],
-                rides: [],
                 rules:{
-                    licenceNum:[(val) => val.length > 0 && val.length < 16],
                     required: [(val) => val.length > 0|| (val)>0 || "Required"],
                 },
+                newAuthorize: {
+                    driverId: "",
+                    vehicleId: "",
+                },
+                driverIds: [],
+                vehicleIds: [],
+
             }
         },
         handleSubmit: function() {
@@ -46,6 +48,24 @@
                 console.log("RESPONSE", response);
                 this.rides = response.data;
             })
+            this.$axios.get("/drivers").then(response => {
+                console.log("RESPONSE", response);
+                this.driverIds = response.data.map(entry => {
+                    return {
+                        text: entry.licenseNumber,
+                        value: entry.id
+                    }
+                })
+            });
+            this.$axios.get("/vehicleslist").then(response => {
+                console.log("RESPONSE", response);
+                this.vehicleIds = response.data.map(entry => {
+                    return {
+                        text: entry.licenseNumber,
+                        value: entry.id
+                    }
+                })
+            });
         }
     }
 </script>
