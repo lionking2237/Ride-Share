@@ -342,23 +342,81 @@ const init = async () => {
                 return Passenger.query();
             },
         },
+
         {
-            method: "GET",
-            path: "/passengers",
+            method: "POST",
+            path: "/signUp",
             config: {
-                description: "Create a new Passenger",
+                description: "Authorize a New Driver to a Vehicle",
                 validate: {
                     payload: Joi.object({
-                        id: Joi.number().required(),
+                        passengerId: Joi.number().integer().min(1).required(),
+                        rideId: Joi.number().integer().min(1).required(),
                     }),
                 },
             },
-            handler: function (request, h) {
-                return Passenger.query()
-                    .findById(request.payload.id)
-                    .withGraphFetched("rides.[fromlocation,tolocation]");
+            handler: async (request, h) => {
+                const passenger = await Passenger.query().findById(request.payload.passengerId);
+                const ride = await Ride.query().findById(request.payload.rideId);
+
+                const existAuth = await passenger
+                    .$relatedQuery("rides")
+                    .where("id", ride.id)
+                    .first();
+                if (existAuth) {
+                    return {
+                        ok: false,
+                        msge: `This Authorization is already in place`,
+                    };
+                }
+
+                const affected = await passenger.$relatedQuery("rides").relate(ride);
+                if (affected === 1) {
+                    return {
+                        ok: true,
+                        msge: `Authorization Created`,
+                    };
+                } else {
+                    return {
+                        ok: false,
+                        msge: `Couldn't create Authorization`,
+                    };
+                }
             },
         },
+        {
+            method: "POST",
+            path: "/login",
+            config: {
+                description: "Log in",
+                validate: {
+                    payload: Joi.object({
+                        id: Joi.number().required()
+                    }),
+                },
+            },
+            handler: async (request, h) => {
+                const passenger = await Passenger.query()
+                    .where("id", request.payload.id)
+                    .first();
+                if (passenger) {
+                    return {
+                        ok: true,
+                        msge: `Logged in successfully as '${request.payload.email}'`,
+                        details: {
+                            id: passenger.id,
+                        },
+                    };
+                } else {
+                    return {
+                        ok: false,
+                        msge: "Invalid email or password",
+                    };
+                }
+            },
+        },
+
+
         {
           method:"POST",
           path: "/passengers",
@@ -472,7 +530,16 @@ const init = async () => {
                 return Ride.query().withGraphFetched("[passengers, drivers, fromLocations, toLocations, vehicles]")
             },
         },
-
+        {
+            method: "GET",
+            path: "/Banana",
+            handler: function(request, h){
+                console.log(this.$root.currentUser);
+                return Passenger.query()
+                    .findById(this.$root.currentUser.id)
+                    .withGraphFetched("vehicles.rides.[fromlocation,tolocation]");
+            }
+        },
         //Vehicles Section
         {
             method: "GET", // Reading Vehicles

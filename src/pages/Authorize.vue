@@ -1,46 +1,46 @@
 <template>
    <v-container>
-       <div><h4 class="display-1">Driver Authorization</h4></div>
-       <div>
-           <v-form v-model="valid">
-               <v-overflow-btn
-               v-bind:rules="rules.required"
-               v-model="newAuthorize.driverId"
-               :items="driverIds"
-               label="Driver">
-               </v-overflow-btn>
-               <v-overflow-btn
-               v-bind:rules="rules.required"
-               v-model="newAuthorize.vehicleId"
-               :items="vehicleIds"
-               label="Vehicle">
-               </v-overflow-btn>
-               <v-btn v-bind:disabled="!valid" v-on:click="handleSubmit"
+    <div><h4 class="display-1">Driver Authorization</h4></div>
+    <div>
+        <v-form v-model="valid">
+            <v-overflow-btn
+                    v-bind:rules="rules.required"
+                    v-model="newAuthorize.driverId"
+                    :items="driverIds"
+                    label="Driver">
+            </v-overflow-btn>
+            <v-overflow-btn
+                    v-bind:rules="rules.required"
+                    v-model="newAuthorize.vehicleId"
+                    :items="vehicleIds"
+                    label="Vehicle">
+            </v-overflow-btn>
+            <v-btn v-bind:disabled="!valid" v-on:click="handleSubmit"
             >Add Authorization
             </v-btn>
-               </v-form>
-           <div class="text-xs-center">
-               <v-dialog v-model="dialogVisible" width="500">
-                   <v-card>
-                       <v-card-title primary-title>
-                           {{ dialogHeader }}
-                       </v-card-title>
+        </v-form>
+        <div class="text-xs-center">
+            <v-dialog v-model="dialogVisible" width="500">
+                <v-card>
+                    <v-card-title primary-title>
+                        {{ dialogHeader }}
+                    </v-card-title>
 
-                       <v-card-text>
-                           {{ dialogText }}
-                       </v-card-text>
+                    <v-card-text>
+                        {{ dialogText }}
+                    </v-card-text>
 
-                       <v-divider></v-divider>
+                    <v-divider></v-divider>
 
-                       <v-card-actions>
-                           <v-spacer></v-spacer>
-                           <v-btn color="primary" text v-on:click="hideDialog">Okay</v-btn>
-                       </v-card-actions>
-                   </v-card>
-               </v-dialog>
-           </div>
-       </div>
-   </v-container>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="primary" text v-on:click="hideDialog">Okay</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </div>
+    </div>
+</v-container>
 </template>
 
 <script>

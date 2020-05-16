@@ -15,6 +15,7 @@
     <v-btn text v-bind:to="{ name: 'locations' }">Locations</v-btn>
     <v-btn text v-bind:to="{name:'vehicles'}"> Create Vehicles</v-btn>
     <v-btn text v-bind:to="{name:'vehicleslist'}">Vehicles List</v-btn>
+    <v-btn text v-bind:to="{name:'ride-sign-up'}">Ride Sign Up</v-btn>
   </v-app-bar>
 </template>
 
