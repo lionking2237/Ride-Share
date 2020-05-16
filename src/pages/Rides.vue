@@ -28,29 +28,29 @@
                     <v-container>
                         <v-row>
                             <v-col cols="12" sm="6" md="4">
-                                <v-text-field v-bind:rules="rules.required" v-model="editedItem.time" label="Time"></v-text-field>
+                                <v-text-field  v-model="editedItem.time" label="Time"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                                <v-text-field v-bind:rules="rules.required" v-model="editedItem.date" label="Date"></v-text-field>
+                                <v-text-field  v-model="editedItem.date" label="Date"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                                <v-text-field v-bind:rules="rules.required" v-model="editedItem.distance" label="Distance(in Miles)"></v-text-field>
+                                <v-text-field  v-model="editedItem.distance" label="Distance(in Miles)"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                                <v-text-field v-bind:rules="rules.required" v-model="editedItem.fuelPrice" label="Fuel Price($)"></v-text-field>
+                                <v-text-field  v-model="editedItem.fuelPrice" label="Fuel Price($)"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                                <v-text-field v-bind:rules="rules.required" v-model="editedItem.fee" label="Fee($)"></v-text-field>
+                                <v-text-field  v-model="editedItem.fee" label="Fee($)"></v-text-field>
                             </v-col>
                             <v-overflow-btn
-                                    v-bind:rules="rules.required"
+
                                     v-model="editedItem.fromLocationId"
                                     :items="locations"
                                     label="Origin"
                             ></v-overflow-btn>
                             <v-col cols="12" sm="6" md="4">
                                 <v-overflow-btn
-                                        v-bind:rules="rules.required"
+
                                         v-model="editedItem.toLocationId"
                                         :items="locations"
                                         label="Destination"
@@ -58,15 +58,15 @@
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
                                 <v-overflow-btn
-                                        v-bind:rules="rules.required"
-                                        v-model="editedItem.vehicleId"
-                                        :items="vehicles"
-                                        label="Vehicle License Plate"
-                                ></v-overflow-btn>
-                            </v-col>
-                        </v-row>
-                    </v-container>
-                </v-card-text>
+
+                                v-model="editedItem.vehicleId"
+                                :items="vehicles"
+                                label="Vehicle License Plate"
+                        ></v-overflow-btn>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-card-text>
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -139,6 +139,7 @@
             save: function(){
                 this.rideUpdated = false;
                 this.$axios.patch(`/rides/${this.editedItem.id}`, {
+                    id: this.editedItem.id,
                     date: this.editedItem.date,
                     time: this.editedItem.time,
                     distance: this.editedItem.distance,

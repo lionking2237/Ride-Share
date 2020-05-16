@@ -236,11 +236,12 @@ const init = async () => {
         },
         {
             method: "PATCH",
-            path: "/rides",
+            path: "/rides/{id}",
             config: {
                 description: "Modify a ride",
                 validate: {
                     payload: Joi.object({
+                        id: Joi.number().required(),
                         date: Joi.string().required(),
                         time: Joi.string().required(),
                         distance: Joi.number().min(1).required(),
@@ -255,25 +256,26 @@ const init = async () => {
             handler: async (request, h) => {
 
                 const newRide = await Ride.query()
-                    .insert({
+                    .where("id", request.payload.id)
+                    .patch({
                         date: request.payload.date,
                         time: request.payload.time,
                         distance: request.payload.distance,
-                        fuelPrice: request.payload.fuelprice,
+                        fuelPrice: request.payload.fuelPrice,
                         fee: request.payload.fee,
-                        fromLocationId: fromLocationId,
-                        toLocationId: toLocationId,
-                        vehicleId: vehicleId,
+                        fromLocationId: request.payload.fromLocationId,
+                        toLocationId: request.payload.toLocationId,
+                        vehicleId: request.payload.vehicleId,
                     });
                 if (newRide) {
                     return {
                         ok: true,
-                        msge: `Created Ride from '${request.payload.fromLocationName}' to '${request.payload.toLocationName}'`,
+                        msge: `Updated Ride on '${request.payload.date}' at '${request.payload.time}'`,
                     };
                 } else {
                     return {
                         ok: false,
-                        msge: `Couldn't Create Ride from '${request.payload.fromLocationName}' to '${request.payload.toLocationName}'`,
+                        msge: `Couldn't update Ride`,
                     };
                 }
             },
