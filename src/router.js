@@ -11,6 +11,7 @@ import Authorize from "./pages/Authorize"
 import ApplyRideShare from "./pages/ApplyRideShare"
 import AddRides from "./pages/AddRides";
 
+
 Vue.use(Router);
 
 export default new Router({
@@ -26,5 +27,6 @@ export default new Router({
     { name: "authorize", path: "/authorize", component: Authorize },
     { name: "applyrideshare", path: "/apply-ride-share", component: ApplyRideShare },
     { name: "add-rides", path: "/add-rides", component: AddRides },
+    { name: "passengers", path: "/passengers", component: Passengers},
   ]
 });

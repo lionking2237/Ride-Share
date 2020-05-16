@@ -343,6 +343,23 @@ const init = async () => {
             },
         },
         {
+            method: "GET",
+            path: "/passengers",
+            config: {
+                description: "Create a new Passenger",
+                validate: {
+                    payload: Joi.object({
+                        id: Joi.number().required(),
+                    }),
+                },
+            },
+            handler: function (request, h) {
+                return Passenger.query()
+                    .findById(request.payload.id)
+                    .withGraphFetched("rides.[fromlocation,tolocation]");
+            },
+        },
+        {
           method:"POST",
           path: "/passengers",
             config: {

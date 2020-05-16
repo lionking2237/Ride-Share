@@ -62,6 +62,7 @@
                 dialogText: "<no dialogText>",
                 dialogVisible: false,
                 authorizationCreated:false,
+                passengers: [],
             }
         },
         methods:{
