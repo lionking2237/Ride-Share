@@ -402,7 +402,7 @@ const init = async () => {
                 if (passenger) {
                     return {
                         ok: true,
-                        msge: `Logged in successfully as '${request.payload.email}'`,
+                        msge: `Logged in successfully`,
                         details: {
                             id: passenger.id,
                         },
@@ -534,9 +534,10 @@ const init = async () => {
             method: "GET",
             path: "/Banana",
             handler: function(request, h){
-                console.log(this.$root.currentUser);
+                const currentAccount = this.$store.state.currentAccount;
+
                 return Passenger.query()
-                    .findById(this.$root.currentUser.id)
+                    .findById(currentAccount.id)
                     .withGraphFetched("vehicles.rides.[fromlocation,tolocation]");
             }
         },

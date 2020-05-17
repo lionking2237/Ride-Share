@@ -79,7 +79,7 @@
        <div>
            <v-overflow-btn
                    v-model="selectedUser"
-                   :items="passengers"
+                   :items="driv"
                    label="Select a Driver to find current rides for">
            </v-overflow-btn>
            <v-btn v-on:click="updateCurrentUser">Select Driver</v-btn>
@@ -124,8 +124,13 @@
                 }).then(response => {
                     this.showDialog(response.data.msge);
                     if (response.data.ok) {
-                        this.$store.commit("updateCurrentUser", response.data.details);
+                        this.$store.commit("logIn", response.data.details);
                     }
+                });
+                this.$axios.get("/Banana", {
+                }).then(response => {
+                    console.log("RESPONSE", response);
+                    this.rides = response.data;
                 });
             },
             updateCurrentDriver: function(){
@@ -194,12 +199,7 @@
                     }
                 })
             });
-            this.$axios.get("/Banana", {
-                id: this.selectedUser.id,
-            }).then(response => {
-                console.log("RESPONSE", response);
-                this.rides = response.data;
-            });
+
         }
     };
 
