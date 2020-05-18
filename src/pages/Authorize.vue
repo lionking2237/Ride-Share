@@ -13,7 +13,7 @@
                     v-bind:rules="rules.required"
                     v-model="newAuthorize.vehicleId"
                     :items="vehicleIds"
-                    label="Vehicle">
+                    label="Vehicle License Plate Number">
             </v-overflow-btn>
             <v-btn v-bind:disabled="!valid" v-on:click="handleSubmit"
             >Add Authorization
@@ -103,7 +103,7 @@
                 console.log("RESPONSE", response);
                 this.driverIds = response.data.map(entry => {
                     return {
-                        text: entry.licenseNumber,
+                        text: entry.firstName + " " + entry.lastName,
                         value: entry.id
                     }
                 })

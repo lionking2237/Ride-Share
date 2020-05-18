@@ -11,6 +11,7 @@ import Authorize from "./pages/Authorize"
 import ApplyRideShare from "./pages/ApplyRideShare"
 import AddRides from "./pages/AddRides";
 import RideSignUp from "./pages/RideSignUp";
+import DriveSignUp from "./pages/DriveSignUp";
 
 Vue.use(Router);
 
@@ -28,6 +29,6 @@ export default new Router({
     { name: "applyrideshare", path: "/apply-ride-share", component: ApplyRideShare },
     { name: "add-rides", path: "/add-rides", component: AddRides },
     { name: "ride-sign-up", path: "/ride-sign-up", component: RideSignUp },
-
+    { name: "drive-sign-up", path: "/drive-sign-up", component: DriveSignUp }
   ]
 });

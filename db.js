@@ -210,8 +210,7 @@ const init = async () => {
             },
             handler: async (request, h) => {
                 const newRide = await Ride.query()
-                    .where()
-                    .patch({
+                    .insert({
                         date: request.payload.date,
                         time: request.payload.time,
                         distance: request.payload.distance,
@@ -345,9 +344,9 @@ const init = async () => {
 
         {
             method: "POST",
-            path: "/signUp",
+            path: "/passengerSignUp",
             config: {
-                description: "Authorize a New Driver to a Vehicle",
+                description: "Add a Passenger to a Ride",
                 validate: {
                     payload: Joi.object({
                         passengerId: Joi.number().integer().min(1).required(),
@@ -371,6 +370,47 @@ const init = async () => {
                 }
 
                 const affected = await passenger.$relatedQuery("rides").relate(ride);
+                if (affected === 1) {
+                    return {
+                        ok: true,
+                        msge: `Authorization Created`,
+                    };
+                } else {
+                    return {
+                        ok: false,
+                        msge: `Couldn't create Authorization`,
+                    };
+                }
+            },
+        },
+        {
+            method: "POST",
+            path: "/driverSignUp",
+            config: {
+                description: "Add a Driver to a Ride",
+                validate: {
+                    payload: Joi.object({
+                        driverId: Joi.number().integer().min(1).required(),
+                        rideId: Joi.number().integer().min(1).required(),
+                    }),
+                },
+            },
+            handler: async (request, h) => {
+                const driver = await Driver.query().findById(request.payload.driverId);
+                const ride = await Ride.query().findById(request.payload.rideId);
+
+                const existAuth = await driver
+                    .$relatedQuery("rides")
+                    .where("id", ride.id)
+                    .first();
+                if (existAuth) {
+                    return {
+                        ok: false,
+                        msge: `This Authorization is already in place`,
+                    };
+                }
+
+                const affected = await driver.$relatedQuery("rides").relate(ride);
                 if (affected === 1) {
                     return {
                         ok: true,
@@ -463,7 +503,7 @@ const init = async () => {
             method: "POST",
             path: "/drivers",
             config: {
-                description: "Create a new Passenger",
+                description: "Create a new Driver",
                 validate: {
                     payload: Joi.object({
                         firstName: Joi.string().required(),
@@ -525,20 +565,29 @@ const init = async () => {
         },
         {
             method: "GET",
-            path: "/driverRides",
+            path: "/driverRides/{driverId}",
             handler: function (request, h) {
-                return Ride.query().withGraphFetched("[passengers, drivers, fromLocations, toLocations, vehicles]")
+                return Driver.query()
+                    .findById(request.params.driverId)
+                    .withGraphFetched("vehicles.rides.[fromLocations, toLocations]")
             },
         },
         {
             method: "GET",
-            path: "/Banana",
+            path: "/passenger/{passengerId}",
             handler: function(request, h){
-                const currentAccount = this.$store.state.currentAccount;
-
                 return Passenger.query()
-                    .findById(currentAccount.id)
-                    .withGraphFetched("vehicles.rides.[fromlocation,tolocation]");
+                    .findById(request.params.passengerId)
+                    .withGraphFetched("rides.[fromLocations,toLocations,vehicles,drivers,passengers]");
+            }
+        },
+        {
+            method: "GET",
+            path: "/driver/{driverId}",
+            handler: function(request, h){
+                return Driver.query()
+                    .findById(request.params.driverId)
+                    .withGraphFetched("rides.[fromLocations,toLocations,vehicles,drivers,passengers]");
             }
         },
         //Vehicles Section

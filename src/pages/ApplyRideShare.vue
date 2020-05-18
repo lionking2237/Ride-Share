@@ -70,19 +70,39 @@
        </div>
        <div>
            <v-overflow-btn
-               v-model="selectedUser"
+               v-model="selectedPassenger"
                :items="passengers"
                label="Select a Passenger to find rides of">
            </v-overflow-btn>
-           <v-btn v-on:click="updateCurrentUser">Select Passenger</v-btn>
+           <v-btn v-on:click="updateCurrentPassenger">Select Passenger</v-btn>
        </div>
        <div>
            <v-overflow-btn
-                   v-model="selectedUser"
-                   :items="driv"
+                   v-model="selectedDriver"
+                   :items="drivers"
                    label="Select a Driver to find current rides for">
            </v-overflow-btn>
-           <v-btn v-on:click="updateCurrentUser">Select Driver</v-btn>
+           <v-btn v-on:click="updateCurrentDriver">Select Driver</v-btn>
+       </div>
+       <v-spacer />
+       <div><h4 class="display-1">View Selected Rides</h4></div>
+       <div>
+           <v-data-table :headers="headers" :items="rides">
+               <template v-slot:item="{ item }">
+                   <tr>
+                       <td>{{ item.date }}</td>
+                       <td>{{ item.time }}</td>
+                       <td>{{ item.distance }}</td>
+                       <td>{{ item.fuelPrice }}</td>
+                       <td>{{ item.fee }}</td>
+                       <td>{{ item.driver }}</td>
+                       <td>{{ item.passenger }}</td>
+                       <td>{{item.fromLocation}}</td>
+                       <td>{{item.toLocation}}</td>
+                       <td>{{item.vehicle}}</td>
+                   </tr>
+               </template>
+           </v-data-table>
        </div>
    </v-container>
 </template>
@@ -92,18 +112,33 @@
         name: "ApplyRideShare",
         data: function() {
             return {
+                dialogText:"",
                 dialogVisible:false,
                 passengerValid:false,
                 driverValid:false,
+                drivers: [],
                 passengers:[],
                 rides: [],
                 dialogHeader:"",
-                selectedUser: {},
+                selectedPassenger: {},
                 selectedDriver:{},
                 rules:{
                     passengerRequired: [(val) => val.length > 0|| (val)>0 || "Required"],
                     driverRequired: [(val) => val.length > 0|| (val)>0 || "Required"],
                 },
+                headers: [
+                    {text: "Date", value: "date"},
+                    {text: "Time", value: "time"},
+                    {text: "Distance", value: "distance"},
+                    {text: "Fuel Price", value: "fuelPrice"},
+                    {text: "Fee", value: "fee"},
+                    {text: "Driver", value: "driver"},
+                    {text: "Passenger", value: "passenger"},
+                    {text: "From Location", value: "fromLocation"},
+                    {text: "To Location", value: "toLocation"},
+                    {text: "Vehicle License Plate", value: "vehicle"},
+
+                ],
                 newPassenger: {
                     firstName: "",
                     lastName: "",
@@ -118,23 +153,43 @@
             }
         },
         methods: {
-            updateCurrentUser: function(){
-                this.$axios.post("/login", {
-                    id: this.selectedUser.id
-                }).then(response => {
-                    this.showDialog(response.data.msge);
-                    if (response.data.ok) {
-                        this.$store.commit("logIn", response.data.details);
-                    }
-                });
-                this.$axios.get("/Banana", {
+            updateCurrentPassenger: function(){
+                this.$axios.get(`/passenger/${this.selectedPassenger.id}`, {
                 }).then(response => {
                     console.log("RESPONSE", response);
-                    this.rides = response.data;
+                    this.rides = response.data.rides.map(ride =>({
+                        id: ride.id,
+                        date: ride.date.slice(0, 10),
+                        time: ride.time,
+                        distance: ride.distance,
+                        fuelPrice: ride.fuelPrice,
+                        fee: ride.fee,
+                        driver: ride.drivers.map(driver => `${driver.firstName} ${driver.lastName} `),
+                        passenger: ride.passengers.map(passenger => `${passenger.firstName} ${passenger.lastName}`),
+                        fromLocation: ride.fromLocations.name,
+                        toLocation: ride.toLocations.name,
+                        vehicle: ride.vehicles.licenseNumber,
+                    }));
                 });
             },
             updateCurrentDriver: function(){
-                this.$root.currentUser=this.selectedDriver
+                this.$axios.get(`/driver/${this.selectedDriver.id}`, {
+                }).then(response => {
+                    console.log("RESPONSE", response);
+                    this.rides = response.data.rides.map(ride =>({
+                        id: ride.id,
+                        date: ride.date.slice(0, 10),
+                        time: ride.time,
+                        distance: ride.distance,
+                        fuelPrice: ride.fuelPrice,
+                        fee: ride.fee,
+                        driver: ride.drivers.map(driver => `${driver.firstName} ${driver.lastName} `),
+                        passenger: ride.passengers.map(passenger => `${passenger.firstName} ${passenger.lastName}`),
+                        fromLocation: ride.fromLocations.name,
+                        toLocation: ride.toLocations.name,
+                        vehicle: ride.vehicles.licenseNumber,
+                    }));
+                });
             },
 
             createPassenger: function() {
@@ -186,16 +241,21 @@
         },
 
         mounted: function () {
-            this.$axios.get("/rides").then(response => {
-                console.log("RESPONSE", response);
-                this.rides = response.data;
-            });
             this.$axios.get("/passengers").then(response => {
                 console.log("RESPONSE", response);
                 this.passengers = response.data.map(passenger => {
                     return{
                         text: passenger.firstName + " " + passenger.lastName,
                         value: passenger,
+                    }
+                })
+            });
+            this.$axios.get("/drivers").then(response => {
+                console.log("RESPONSE", response);
+                this.drivers = response.data.map(driver => {
+                    return{
+                        text: driver.firstName + " " + driver.lastName,
+                        value: driver,
                     }
                 })
             });

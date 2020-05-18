@@ -4,12 +4,12 @@
             <v-text-field
                     v-model="newRide.date"
                     v-bind:rules="rules.required"
-                    label="Date">
+                    label="YYYY-MM-DD(Date)">
             </v-text-field>
             <v-text-field
                     v-model="newRide.time"
                     v-bind:rules="rules.required"
-                    label="Time">
+                    label="HH:MM:SS(Military Time)">
             </v-text-field>
             <v-text-field
                     v-model="newRide.distance"
@@ -45,7 +45,7 @@
                     label="Destination"
             ></v-overflow-btn>
             <v-btn v-bind:disabled="!valid" v-on:click="handleSubmit"
-            >Add Vehicle
+            >Add Ride
             </v-btn>
         </v-form>
         <div class="text-xs-center">

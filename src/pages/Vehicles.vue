@@ -218,7 +218,7 @@
                 this.dialogVisible = false;
                 if (this.vehicleCreated) {
                     // Only navigate away from the sign-up page if we were successful.
-                    this.$router.push({ name: "home-page" });
+
                 }
             },
         },

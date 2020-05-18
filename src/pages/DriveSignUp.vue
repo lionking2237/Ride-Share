@@ -1,22 +1,27 @@
 <template>
     <v-container>
-        <div><h4 class="display-1">Sign Up For a Ride</h4></div>
+        <div><h4 class="display-1">Select a Ride to Drive For</h4></div>
         <div>
-            <v-form v-model="valid">
+            <v-form v-model="driverValid">
                 <v-overflow-btn
                         v-bind:rules="rules.required"
-                        v-model="newAuthorize.passengerId"
-                        :items="passengers"
-                        label="Passengers">
+                        v-model="newAuthorize.driverId"
+                        :items="drivers"
+                        label="Drivers">
                 </v-overflow-btn>
+                <v-btn v-bind:disabled="!driverValid" v-on:click="findDriver"
+                >Select Driver
+                </v-btn>
+            </v-form>
+            <v-form v-model="rideValid">
                 <v-overflow-btn
                         v-bind:rules="rules.required"
                         v-model="newAuthorize.rideId"
                         :items="rides"
                         label="Rides">
                 </v-overflow-btn>
-                <v-btn v-bind:disabled="!valid" v-on:click="handleSubmit"
-                >Join Ride
+                <v-btn v-bind:disabled="!rideValid" v-on:click="handleSubmit"
+                >Drive for Ride
                 </v-btn>
             </v-form>
             <div class="text-xs-center">
@@ -45,15 +50,16 @@
 
 <script>
     export default {
-        name: "RideSignUp",
+        name: "DriveSignUp",
         data: function() {
             return {
-                valid: false,
+                driverValid: false,
+                rideValid: false,
                 rules:{
                     required: [(val) => val.length > 0|| (val)>0 || "Required"],
                 },
                 newAuthorize: {
-                    passengerId: "",
+                    driverId: "",
                     rideId: "",
                 },
                 rides:[],
@@ -61,15 +67,25 @@
                 dialogText: "<no dialogText>",
                 dialogVisible: false,
                 authorizationCreated:false,
-                passengers: [],
+                drivers: [],
             }
         },
         methods:{
+            findDriver: function() {
+                this.$axios.get(`/driverRides/${this.newAuthorize.driverId}`, {
+                }).then(response => {
+                    console.log("RESPONSE", response);
+                    this.rides = response.data.vehicles.map(vehicle =>({
+                        text: vehicle.rides.map(ride => ride.fromLocations.name + " to " +ride.toLocations.name),
+                        value: vehicle.rides.map(ride => ride.id),
+                    }));
+                });
+            },
             handleSubmit: function() {
                 this.authorizationCreated = false;
-                this.$axios.post("/passengerSignUp", {
-                    passengerId: this.newAuthorize.passengerId,
-                    rideId: this.newAuthorize.rideId,
+                this.$axios.post("/driverSignUp", {
+                    driverId: this.newAuthorize.driverId,
+                    rideId: this.newAuthorize.rideId[0],
                 }).then(response => {
                     if (response.data.ok) {
                         this.showDialog("Success", response.data.msge);
@@ -84,7 +100,7 @@
                 this.dialogVisible = false;
                 if (this.vehicleCreated) {
                     // Only navigate away from the sign-up page if we were successful.
-                    this.$router.push({ name: "home-page" });
+
                 }
             },
             showDialog: function (header, text) {
@@ -94,18 +110,9 @@
             },
         },
         mounted: function () {
-            this.$axios.get("/rides").then(response => {
+            this.$axios.get("/drivers").then(response => {
                 console.log("RESPONSE", response);
-                this.rides = response.data.map(ride =>{
-                    return{
-                        text: ride.fromLocations.name + " to " + ride.toLocations.name,
-                        value: ride.id,
-                    }
-                });
-            });
-            this.$axios.get("/passengers").then(response => {
-                console.log("RESPONSE", response);
-                this.passengers = response.data.map(entry => {
+                this.drivers = response.data.map(entry => {
                     return {
                         text: entry.firstName + " " + entry.lastName,
                         value: entry.id
