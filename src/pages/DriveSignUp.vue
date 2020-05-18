@@ -75,10 +75,16 @@
                 this.$axios.get(`/driverRides/${this.newAuthorize.driverId}`, {
                 }).then(response => {
                     console.log("RESPONSE", response);
-                    this.rides = response.data.vehicles.map(vehicle =>({
-                        text: vehicle.rides.map(ride => ride.fromLocations.name + " to " +ride.toLocations.name),
-                        value: vehicle.rides.map(ride => ride.id),
-                    }));
+                    this.rides = [];
+                    response.data.vehicles.forEach((vehicle) =>
+                        vehicle.rides.forEach((ride) =>
+                            this.rides.push({
+                                text: `${ride.fromLocations.name} to ${ride.toLocations.name}`,
+                                value: ride.id,
+                            })
+                        )
+                    );
+                    console.log("RIDES", this.rides);
                 });
             },
             handleSubmit: function() {
