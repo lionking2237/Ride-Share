@@ -1,14 +1,13 @@
 <template>
-  <v-app-bar app dark color="primary">
-    <router-link v-bind:to="{ name: 'home-page' }">
+  <v-app-bar app dark color="green">
+    <router-link style="text-decoration:none" v-bind:to="{ name: 'home-page' }">
       <v-toolbar-title class="white--text">
-        The Amazing Ride Share
+        The Warlock's Ride Share
       </v-toolbar-title>
     </router-link>
 
     <v-spacer/>
 
-    <v-btn text v-bind:to="{ name: 'about-us' }">About Us</v-btn>
     <v-btn text v-bind:to="{ name: 'locations' }">Locations</v-btn>
     <v-btn text v-bind:to="{name:'rides'}">Rides</v-btn>
     <v-btn text v-bind:to="{name:'vehicleslist'}">Vehicles List</v-btn>
