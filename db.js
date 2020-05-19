@@ -365,7 +365,7 @@ const init = async () => {
                 if (existAuth) {
                     return {
                         ok: false,
-                        msge: `This Authorization is already in place`,
+                        msge: `This Passenger is already in this Ride`,
                     };
                 }
 
@@ -373,12 +373,12 @@ const init = async () => {
                 if (affected === 1) {
                     return {
                         ok: true,
-                        msge: `Authorization Created`,
+                        msge: `This Passenger is now signed up for this Ride`,
                     };
                 } else {
                     return {
                         ok: false,
-                        msge: `Couldn't create Authorization`,
+                        msge: `Couldn't sign up this Passenger for this Ride`,
                     };
                 }
             },
@@ -406,7 +406,7 @@ const init = async () => {
                 if (existAuth) {
                     return {
                         ok: false,
-                        msge: `This Authorization is already in place`,
+                        msge: `This Driver is already signed up for this Ride`,
                     };
                 }
 
@@ -414,12 +414,12 @@ const init = async () => {
                 if (affected === 1) {
                     return {
                         ok: true,
-                        msge: `Authorization Created`,
+                        msge: `Driver can now drive for this Ride`,
                     };
                 } else {
                     return {
                         ok: false,
-                        msge: `Couldn't create Authorization`,
+                        msge: `Driver couldn't be added to this Ride`,
                     };
                 }
             },
