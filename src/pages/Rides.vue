@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-btn text v-bind:to="{name:'add-rides'}">Add Ride</v-btn>
+        <v-btn color="green" class="white--text" v-bind:to="{name:'add-rides'}">Add Ride</v-btn>
         <v-data-table :headers="headers" :items="rides">
             <template v-slot:item="{ item }">
                 <tr>
@@ -14,7 +14,8 @@
                     <td>{{item.fromLocation}}</td>
                     <td>{{item.toLocation}}</td>
                     <td>{{item.vehicle}}</td>
-                    <td><v-btn color="primary" dark class="mb-2" v-on:click="showDialog(item)">Update</v-btn></td>
+                    <td><v-btn color="green"
+                    class="white--text" v-on:click="showDialog(item)">Update</v-btn></td>
                 </tr>
             </template>
         </v-data-table>
@@ -70,14 +71,16 @@
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text v-on:click="save">Save</v-btn>
+                    <v-btn color="green"
+                    class="white--text" v-on:click="save">Save</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
 
         <v-snackbar v-model="snackbar.show">
             {{ snackbar.text }}
-            <v-btn color="blue" text @click="snackbar.show = false">
+            <v-btn color="green"
+                    class="white--text" @click="snackbar.show = false">
                 Close
             </v-btn>
         </v-snackbar>
@@ -122,7 +125,6 @@
                     {text: "From Location", value: "fromLocation"},
                     {text: "To Location", value: "toLocation"},
                     {text: "Vehicle License Plate", value: "vehicle"},
-
                 ],
                 rides: [],
             }
@@ -160,7 +162,6 @@
                     }
                 })
                     .catch((err) => this.showDialog("Failed", err));
-
             },
         },
         mounted: function () {

@@ -18,7 +18,9 @@
                v-bind:rules="rules.passengerRequired"
                label="Passenger Cellphone Number">
                </v-text-field>
-               <v-btn v-bind:disabled="!passengerValid" v-on:click="createPassenger"
+               <v-btn color="green"
+                    class="white--text"
+                    v-bind:disabled="!passengerValid" v-on:click="createPassenger"
             >Add Passenger
             </v-btn>
            </v-form>
@@ -43,7 +45,9 @@
                v-bind:rules="rules.driverRequired"
                label="Driver License Number">
                </v-text-field>
-               <v-btn v-bind:disabled="!driverValid" v-on:click="createDriver"
+               <v-btn color="green"
+                    class="white--text"
+                    v-bind:disabled="!driverValid" v-on:click="createDriver"
             >Add Driver
             </v-btn>
            </v-form>
@@ -62,7 +66,8 @@
 
                        <v-card-actions>
                            <v-spacer></v-spacer>
-                           <v-btn color="primary" text v-on:click="hideDialog">Okay</v-btn>
+                           <v-btn color="green"
+                    class="white--text" text v-on:click="hideDialog">Okay</v-btn>
                        </v-card-actions>
                    </v-card>
                </v-dialog>
@@ -74,7 +79,9 @@
                :items="passengers"
                label="Select a Passenger to find rides of">
            </v-overflow-btn>
-           <v-btn v-on:click="updateCurrentPassenger">Select Passenger</v-btn>
+           <v-btn color="green"
+                    class="white--text"
+                    v-on:click="updateCurrentPassenger">Select Passenger</v-btn>
        </div>
        <div>
            <v-overflow-btn
@@ -82,7 +89,9 @@
                    :items="drivers"
                    label="Select a Driver to find current rides for">
            </v-overflow-btn>
-           <v-btn v-on:click="updateCurrentDriver">Select Driver</v-btn>
+           <v-btn color="green"
+                    class="white--text"
+                    v-on:click="updateCurrentDriver">Select Driver</v-btn>
        </div>
        <v-spacer />
        <div><h4 class="display-1">View Selected Rides</h4></div>
@@ -137,7 +146,6 @@
                     {text: "From Location", value: "fromLocation"},
                     {text: "To Location", value: "toLocation"},
                     {text: "Vehicle License Plate", value: "vehicle"},
-
                 ],
                 newPassenger: {
                     firstName: "",
@@ -191,7 +199,6 @@
                     }));
                 });
             },
-
             createPassenger: function() {
                 this.$axios.post("/passengers", {
                     firstName: this.newPassenger.firstName,
@@ -228,7 +235,6 @@
                 this.dialogText = text;
                 this.dialogVisible = true;
             },
-
             // Invoked by the "Okay" button on the dialog; dismiss the dialog
             // and navigate to the home page.
             hideDialog: function () {
@@ -239,7 +245,6 @@
                 }
             },
         },
-
         mounted: function () {
             this.$axios.get("/passengers").then(response => {
                 console.log("RESPONSE", response);
@@ -259,11 +264,8 @@
                     }
                 })
             });
-
         }
     };
-
-
 </script>
 
 <style scoped>

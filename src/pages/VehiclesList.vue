@@ -15,7 +15,8 @@
             <td>{{ item.licenseState }}</td>
             <td>{{ item.licenseNumber }}</td>
             <td>{{item.type}}</td>
-            <td><v-btn color="primary" dark class="mb-2" v-on:click="showDialog(item)">Push</v-btn></td>
+            <td><v-btn color="green"
+                    class="white--text" v-on:click="showDialog(item)">Update</v-btn></td>
           </tr>
         </template>
       </v-data-table>
@@ -68,14 +69,16 @@
 
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text v-on:click="save">Save</v-btn>
+                    <v-btn color="green"
+                    class="white--text" v-on:click="save">Save</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
 
     <v-snackbar v-model="snackbar.show">
       {{ snackbar.text }}
-      <v-btn color="blue" text @click="snackbar.show = false">
+      <v-btn color="green"
+                    class="white--text" @click="snackbar.show = false">
         Close
       </v-btn>
     </v-snackbar>
@@ -137,7 +140,6 @@
                 vehicleUpdated: false,
                 
                 dialogVisible: false,
-
                 headers: [
                     {text: "Make", value: "make"},
                     {text: "Model", value: "model"},
@@ -221,11 +223,9 @@
     }
     /* Rides.query()
 .withGraphFetched("[passengers,drivers]")
-
 Rides.query()
 .findById(request.rideId)
 .withGraphFetched("[passengers,drivers]")
-
 Drivers.query()
 .findById(request.params.driverId)
 .withGraphFetched("vehicles.rides") */

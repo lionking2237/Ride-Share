@@ -44,7 +44,9 @@
                     :items="locations"
                     label="Destination"
             ></v-overflow-btn>
-            <v-btn v-bind:disabled="!valid" v-on:click="handleSubmit"
+            <v-btn color="green"
+                    class="white--text"
+                    v-bind:disabled="!valid" v-on:click="handleSubmit"
             >Add Ride
             </v-btn>
         </v-form>
@@ -63,7 +65,8 @@
 
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" text v-on:click="hideDialog">Okay</v-btn>
+                        <v-btn color="green"
+                    class="white--text" text v-on:click="hideDialog">Okay</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -162,5 +165,4 @@
 </script>
 
 <style scoped>
-
 </style>

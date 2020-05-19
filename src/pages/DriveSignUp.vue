@@ -1,6 +1,7 @@
 <template>
     <v-container>
         <div><h4 class="display-1">Select a Ride to Drive For</h4></div>
+        <div><h4 class="display-5">Please select a Driver first, then the Ride.</h4></div>
         <div>
             <v-form v-model="driverValid">
                 <v-overflow-btn
@@ -9,7 +10,8 @@
                         :items="drivers"
                         label="Drivers">
                 </v-overflow-btn>
-                <v-btn v-bind:disabled="!driverValid" v-on:click="findDriver"
+                <v-btn color="green"
+                    class="white--text" v-bind:disabled="!driverValid" v-on:click="findDriver"
                 >Select Driver
                 </v-btn>
             </v-form>
@@ -20,7 +22,8 @@
                         :items="rides"
                         label="Rides">
                 </v-overflow-btn>
-                <v-btn v-bind:disabled="!rideValid" v-on:click="handleSubmit"
+                <v-btn color="green"
+                    class="white--text" v-bind:disabled="!rideValid" v-on:click="handleSubmit"
                 >Drive for Ride
                 </v-btn>
             </v-form>
@@ -91,7 +94,7 @@
                 this.authorizationCreated = false;
                 this.$axios.post("/driverSignUp", {
                     driverId: this.newAuthorize.driverId,
-                    rideId: this.newAuthorize.rideId[0],
+                    rideId: this.newAuthorize.rideId,
                 }).then(response => {
                     if (response.data.ok) {
                         this.showDialog("Success", response.data.msge);
@@ -106,7 +109,6 @@
                 this.dialogVisible = false;
                 if (this.vehicleCreated) {
                     // Only navigate away from the sign-up page if we were successful.
-
                 }
             },
             showDialog: function (header, text) {
@@ -130,5 +132,4 @@
 </script>
 
 <style scoped>
-
 </style>

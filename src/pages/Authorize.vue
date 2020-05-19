@@ -15,7 +15,8 @@
                     :items="vehicleIds"
                     label="Vehicle License Plate Number">
             </v-overflow-btn>
-            <v-btn v-bind:disabled="!valid" v-on:click="handleSubmit"
+            <v-btn color="green"
+                    class="white--text" v-bind:disabled="!valid" v-on:click="handleSubmit"
             >Add Authorization
             </v-btn>
         </v-form>

@@ -9,8 +9,10 @@
                     width="500"
             >
                 <template v-slot:activator="{ on }">
-                    <v-btn
-                            v-on="on"
+                    <v-btn 
+                    color="green"
+                    class="white--text"
+                    v-on="on"
                     >
                         Add Vehicle Type
                     </v-btn>
@@ -37,8 +39,8 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
-                                color="primary"
-                                text
+                                color="green"
+                                class="white--text"
                                 @click="createType"
                         >
                             Create
@@ -91,7 +93,9 @@
                     :items="states"
                     label="States"
             ></v-overflow-btn>
-            <v-btn v-bind:disabled="!valid" v-on:click="handleSubmit"
+            <v-btn color="green"
+                    class="white--text" 
+                    v-bind:disabled="!valid" v-on:click="handleSubmit"
             >Add Vehicle
             </v-btn>
         </v-form>
@@ -218,7 +222,6 @@
                 this.dialogVisible = false;
                 if (this.vehicleCreated) {
                     // Only navigate away from the sign-up page if we were successful.
-
                 }
             },
         },

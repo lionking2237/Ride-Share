@@ -9,7 +9,6 @@
 <script>
     export default {
         name: "Locations",
-
         data: function () {
             return {
                 headers: [
@@ -19,11 +18,9 @@
                     {text: "State", value: "state"},
                     {text: "Zip Code", value: "zipCode"},
                 ],
-
                 locations: []
             }
         },
-
         mounted: function () {
             this.$axios.get("/locations").then(response => {
                 console.log("RESPONSE", response);
